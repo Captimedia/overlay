@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Captimedia Overlay</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #container {
+      padding: 20px;
+      font-size: 32px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">Chargement…</div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const scorebird = params.get("scorebird");
+    const mode = params.get("mode");
+
+    const container = document.getElementById("container");
+
+    if (!scorebird || !mode) {
+      container.textContent = "Paramètres manquants";
+      throw new Error("Paramètres manquants");
+    }
+
+    const JSON_URL = "https://script.google.com/macros/s/AKfycbwpBgO5y9Dop9TNh-OWvUxFyecopA_rvOf-y9064svj/dev";
+
+    fetch(`${JSON_URL}?scorebird=${scorebird}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          container.textContent = data.error;
+          return;
+        }
+
+        if (mode === "url") {
+          container.textContent =
+            data.live?.scorebird_url || "URL Scorebird absente";
+        }
+
+        if (mode === "live") {
+          container.innerHTML = `
+            <div>Match ID : ${data.live?.horaire_id || "-"}</div>
+            <div>${data.live?.division || ""} ${data.live?.round || ""}</div>
+          `;
+        }
+
+        if (mode === "next") {
+          container.innerHTML = `
+            <div>${data.selected?.teams || "Aucun match suivant"}</div>
+            <div>${data.selected?.time || ""}</div>
+          `;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        container.textContent = "Erreur de chargement JSON";
+      });
+  </script>
+</body>
+</html>
