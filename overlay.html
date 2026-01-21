@@ -1,10 +1,11 @@
-e<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Captimedia Overlay</title>
+  <title>Capti Overlay</title>
+
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
       background: transparent;
@@ -15,24 +16,109 @@ e<!DOCTYPE html>
     #container {
       padding: 20px;
       font-size: 32px;
+      line-height: 1.3;
     }
 
-    .hidden {
-      display: none;
+    .small {
+      font-size: 22px;
+      opacity: 0.85;
+    }
+
+    .error {
+      color: red;
+      font-size: 20px;
     }
   </style>
 </head>
-<body>
-  <div id="container">Chargement… Je tente quelque chose</div>
-  
-<script>
-  function handleOverlay(data) {
-    document.body.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
-  }
-</script>
 
-  
-je ne comprends pas !
-  
+<body>
+  <div id="container">Chargement…</div>
+
+  <script>
+    /*************************************************
+     * CONFIG
+     *************************************************/
+    const GAS_URL =
+      "https://script.google.com/macros/s/TON_DEPLOYMENT_ID/exec";
+
+    /*************************************************
+     * UTIL – paramètres URL
+     *************************************************/
+    function getParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    const scorebird = getParam("scorebird");
+    const mode = getParam("mode") || "url";
+
+    if (!scorebird) {
+      document.getElementById("container").innerHTML =
+        '<div class="error">Paramètre scorebird manquant</div>';
+      throw new Error("scorebird manquant");
+    }
+
+    /*************************************************
+     * JSONP CALLBACK
+     *************************************************/
+    function handleOverlay(data) {
+      const container = document.getElementById("container");
+
+      if (!data || data.error) {
+        container.innerHTML =
+          '<div class="error">' + (data?.error || "Erreur JSON") + '</div>';
+        return;
+      }
+
+      // ===== MODE URL (Scorebird seulement) =====
+      if (mode === "url") {
+        container.innerHTML = data.live?.scorebird_url
+          ? data.live.scorebird_url
+          : "";
+        return;
+      }
+
+      // ===== MODE LIVE =====
+      if (mode === "live") {
+        if (!data.live) {
+          container.innerHTML = "";
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="small">${data.live.division || ""} ${data.live.round || ""}</div>
+          <div>${data.live.teams}</div>
+        `;
+        return;
+      }
+
+      // ===== MODE NEXT =====
+      if (mode === "next") {
+        if (!data.selected) {
+          container.innerHTML = "";
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="small">À venir</div>
+          <div>${data.selected.teams}</div>
+        `;
+        return;
+      }
+
+      container.innerHTML =
+        '<div class="error">Mode inconnu</div>';
+    }
+
+    /*************************************************
+     * CHARGEMENT JSONP
+     *************************************************/
+    const script = document.createElement("script");
+    script.src =
+      GAS_URL +
+      "?scorebird=" + encodeURIComponent(scorebird) +
+      "&callback=handleOverlay";
+
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
