@@ -69,11 +69,13 @@
         return;
       }
 
-      // ===== MODE URL (Scorebird seulement) =====
+          // ===== MODE URL =====
       if (mode === "url") {
-        container.innerHTML = data.live?.scorebird_url
-          ? data.live.scorebird_url
-          : "";
+        if (data.live?.scorebird_url) {
+          window.location.replace(data.live.scorebird_url);
+        } else {
+          container.innerHTML = "";
+        }
         return;
       }
 
