@@ -26,22 +26,12 @@
   <div id="container">Chargement…</div>
   
 <script>
-  const callbackName = "handleOverlay";
-
-  window[callbackName] = function (data) {
-    console.log("DATA REÇUE", data);
-    // ici tu affiches scorebird_url, division, round, etc.
-  };
-
-  const script = document.createElement("script");
-  script.src =
-    "https://script.google.com/macros/s/AKfycbwpBgO5y9Dop9TNh-OWvUxFyecopA_rvOf-y9064svj/dev" +
-    "?scorebird=21159" +
-    "&callback=" + callbackName;
-
-  document.body.appendChild(script);
+  function handleOverlay(data) {
+    document.body.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+  }
 </script>
 
+  
 
   
 </body>
