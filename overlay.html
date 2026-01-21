@@ -69,16 +69,28 @@
         return;
       }
 
-          // ===== MODE URL =====
-      if (mode === "url") {
-        if (data.live?.scorebird_url) {
-          window.location.replace(data.live.scorebird_url);
-        } else {
-          container.innerHTML = "";
-        }
-        return;
-      }
+// ===== MODE URL (Scorebird iframe) =====
+if (mode === "url") {
+  if (!data.live?.scorebird_url) {
+    container.innerHTML = "";
+    return;
+  }
 
+  container.innerHTML = `
+    <iframe
+      src="${data.live.scorebird_url}"
+      style="
+        border:0;
+        width:100vw;
+        height:100vh;
+        background: transparent;
+      "
+      allow="autoplay"
+      allowfullscreen
+    ></iframe>
+  `;
+  return;
+}
       // ===== MODE LIVE =====
       if (mode === "live") {
         if (!data.live) {
