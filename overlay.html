@@ -24,52 +24,25 @@
 </head>
 <body>
   <div id="container">Chargement…</div>
+  
+<script>
+  const callbackName = "handleOverlay";
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const scorebird = params.get("scorebird");
-    const mode = params.get("mode");
+  window[callbackName] = function (data) {
+    console.log("DATA REÇUE", data);
+    // ici tu affiches scorebird_url, division, round, etc.
+  };
 
-    const container = document.getElementById("container");
+  const script = document.createElement("script");
+  script.src =
+    "https://script.google.com/macros/s/AKfycbwpBgO5y9Dop9TNh-OWvUxFyecopA_rvOf-y9064svj/dev" +
+    "?scorebird=21159" +
+    "&callback=" + callbackName;
 
-    if (!scorebird || !mode) {
-      container.textContent = "Paramètres manquants";
-      throw new Error("Paramètres manquants");
-    }
+  document.body.appendChild(script);
+</script>
 
-    const JSON_URL = "https://script.google.com/macros/s/AKfycbwpBgO5y9Dop9TNh-OWvUxFyecopA_rvOf-y9064svj/dev?Scorebird=21159";
 
-    fetch(`${JSON_URL}?scorebird=${scorebird}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) {
-          container.textContent = data.error;
-          return;
-        }
-
-        if (mode === "url") {
-          container.textContent =
-            data.live?.scorebird_url || "URL Scorebird absente";
-        }
-
-        if (mode === "live") {
-          container.innerHTML = `
-            <div>Match ID : ${data.live?.horaire_id || "-"}</div>
-            <div>${data.live?.division || ""} ${data.live?.round || ""}</div>
-          `;
-        }
-
-        if (mode === "next") {
-          container.innerHTML = `
-            <div>${data.selected?.teams || "Aucun match suivant"}</div>
-            <div>${data.selected?.time || ""}</div>
-          `;
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        container.textContent = "Erreur de chargement JSON";
-      });
-  </script>
+  
 </body>
 </html>
