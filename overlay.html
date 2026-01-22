@@ -1,152 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Capti Overlay</title>
+<meta charset="UTF-8" />
+<title>Capti Lower Third</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      color: white;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+  }
 
-    #container {
-      padding: 24px;
-      font-size: 34px;
-      line-height: 1.25;
-    }
+  /* ===== CONTAINER ===== */
+  .lowerthird {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    min-width: 700px;
+    max-width: 1200px;
+    background: rgba(15, 15, 15, 0.85);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    animation: slideIn 0.6s ease-out forwards;
+  }
 
-    .title {
-      font-size: 26px;
-      opacity: 0.85;
-      margin-bottom: 6px;
-    }
+  /* ===== COLOR BAR ===== */
+  .accent {
+    width: 10px;
+    background: linear-gradient(
+      180deg,
+      #1e90ff,
+      #00c6ff
+    );
+  }
 
-    .subtitle {
-      font-size: 28px;
-      opacity: 0.9;
-      margin-bottom: 10px;
-    }
+  /* ===== CONTENT ===== */
+  .content {
+    padding: 20px 28px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-    .teams {
-      font-size: 34px;
-      font-weight: bold;
-    }
+  .eyebrow {
+    font-size: 16px;
+    opacity: 0.75;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
 
-    .error {
-      color: red;
-      font-size: 20px;
+  .title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .subtitle {
+    font-size: 22px;
+    opacity: 0.9;
+  }
+
+  /* ===== ANIMATION ===== */
+  @keyframes slideIn {
+    from {
+      transform: translateX(-40px);
+      opacity: 0;
     }
-  </style>
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+</style>
 </head>
 
 <body>
-  <div id="container">Chargement…</div>
 
-  <script>
-    /*************************************************
-     * CONFIG
-     *************************************************/
-    const GAS_URL =
-      "https://script.google.com/macros/s/AKfycbzPAfwh7Ze_IWQwhjofZdl6YntsYraHutWFeOYuhBoVdKtBmmNokvXR4g3klleG9nGfVg/exec";
+<div class="lowerthird">
+  <div class="accent"></div>
 
-    /*************************************************
-     * UTIL – paramètres URL
-     *************************************************/
-    function getParam(name) {
-      return new URLSearchParams(window.location.search).get(name);
-    }
+  <div class="content">
+    <div class="eyebrow" id="line1">
+      Partie #1 — M21C • Pool 1
+    </div>
 
-    const scorebird = getParam("scorebird");
-    const mode = getParam("mode") || "live";
+    <div class="title" id="line2">
+      Gladiateurs vs Prédateurs
+    </div>
 
-    if (!scorebird) {
-      document.getElementById("container").innerHTML =
-        '<div class="error">Paramètre scorebird manquant</div>';
-      throw new Error("scorebird manquant");
-    }
+    <div class="subtitle" id="line3">
+      Vendredi 23 janvier • 20h30
+    </div>
+  </div>
+</div>
 
-    /*************************************************
-     * JSONP CALLBACK
-     *************************************************/
-    function handleOverlay(data) {
-      const container = document.getElementById("container");
-
-      if (!data || data.error) {
-        container.innerHTML =
-          '<div class="error">' + (data?.error || "Erreur JSON") + '</div>';
-        return;
-      }
-
-      /* ===== MODE LIVE ===== */
-      if (mode === "live") {
-        if (!data.live) {
-          container.innerHTML = "";
-          return;
-        }
-
-        container.innerHTML = `
-          <div class="title">Partie : #${data.live.horaire_id}</div>
-          <div class="subtitle">${data.live.division} - ${data.live.round}</div>
-        `;
-        return;
-      }
-
-      /* ===== MODE NEXT ===== */
-      if (mode === "next") {
-        if (!data.selected) {
-          container.innerHTML = "";
-          return;
-        }
-
-        container.innerHTML = `
-          <div class="title">Prochain match :</div>
-          <div class="subtitle">
-            #${data.selected.horaire_id} – ${data.selected.date} ${data.selected.time}
-            (${data.selected.division} - ${data.selected.round})
-          </div>
-          <div class="teams">
-            ${data.selected.home_name} vs ${data.selected.away_name}
-          </div>
-        `;
-        return;
-      }
-
-      /* ===== MODE URL (Scorebird iframe) ===== */
-      if (mode === "url") {
-        if (!data.live?.scorebird_url) {
-          container.innerHTML = "";
-          return;
-        }
-
-        container.innerHTML = `
-          <iframe
-            src="${data.live.scorebird_url}"
-            style="border:0;width:100vw;height:100vh;background:transparent"
-            allow="autoplay"
-            allowfullscreen
-          ></iframe>
-        `;
-        return;
-      }
-
-      container.innerHTML =
-        '<div class="error">Mode inconnu</div>';
-    }
-
-    /*************************************************
-     * CHARGEMENT JSONP
-     *************************************************/
-    const script = document.createElement("script");
-    script.src =
-      GAS_URL +
-      "?scorebird=" + encodeURIComponent(scorebird) +
-      "&callback=handleOverlay";
-
-    document.body.appendChild(script);
-  </script>
 </body>
 </html>
