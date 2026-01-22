@@ -51,7 +51,9 @@
 </head>
 
 <body>
-  <div id="container">Chargement…</div>
+
+  <!-- Container utilisé UNIQUEMENT pour live / next -->
+  <div id="container" style="display:none;">Chargement…</div>
 
   <script>
     /*************************************************
@@ -61,7 +63,7 @@
       "https://script.google.com/macros/s/AKfycbzPAfwh7Ze_IWQwhjofZdl6YntsYraHutWFeOYuhBoVdKtBmmNokvXR4g3klleG9nGfVg/exec";
 
     /*************************************************
-     * UTIL – paramètres URL
+     * PARAMÈTRES URL
      *************************************************/
     function getParam(name) {
       return new URLSearchParams(window.location.search).get(name);
@@ -71,7 +73,7 @@
     const mode = getParam("mode") || "live";
 
     if (!scorebird) {
-      document.getElementById("container").innerHTML =
+      document.body.innerHTML =
         '<div class="error">Paramètre scorebird manquant</div>';
       throw new Error("scorebird manquant");
     }
@@ -93,7 +95,34 @@
      * JSONP CALLBACK
      *************************************************/
     function handleOverlay(data) {
+
+      /* ===== MODE URL (SCOREBIRD) ===== */
+      if (mode === "url") {
+        document.body.innerHTML = "";
+
+        if (!data?.live?.scorebird_url) return;
+
+        document.body.innerHTML = `
+          <iframe
+            src="${data.live.scorebird_url}"
+            style="
+              position:fixed;
+              inset:0;
+              width:100vw;
+              height:100vh;
+              border:0;
+              background:transparent;
+            "
+            allow="autoplay"
+            allowfullscreen
+          ></iframe>
+        `;
+        return;
+      }
+
+      /* ===== MODES AVEC CONTAINER ===== */
       const container = document.getElementById("container");
+      container.style.display = "inline-block";
 
       if (!data || data.error) {
         container.innerHTML =
@@ -134,24 +163,6 @@
           <div class="teams">
             ${data.selected.teams}
           </div>
-        `;
-        return;
-      }
-
-      /* ===== MODE URL (Scorebird iframe) ===== */
-      if (mode === "url") {
-        if (!data.live?.scorebird_url) {
-          container.innerHTML = "";
-          return;
-        }
-
-        container.innerHTML = `
-          <iframe
-            src="${data.live.scorebird_url}"
-            style="border:0;width:100vw;height:100vh;background:transparent"
-            allow="autoplay"
-            allowfullscreen
-          ></iframe>
         `;
         return;
       }
