@@ -14,14 +14,26 @@
     }
 
     #container {
-      padding: 20px;
-      font-size: 32px;
-      line-height: 1.3;
+      padding: 24px;
+      font-size: 34px;
+      line-height: 1.25;
     }
 
-    .small {
-      font-size: 22px;
+    .title {
+      font-size: 26px;
       opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 28px;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .teams {
+      font-size: 34px;
+      font-weight: bold;
     }
 
     .error {
@@ -49,7 +61,7 @@
     }
 
     const scorebird = getParam("scorebird");
-    const mode = getParam("mode") || "url";
+    const mode = getParam("mode") || "live";
 
     if (!scorebird) {
       document.getElementById("container").innerHTML =
@@ -69,29 +81,7 @@
         return;
       }
 
-      // ===== MODE URL (Scorebird iframe) =====
-      if (mode === "url") {
-        if (!data.live?.scorebird_url) {
-          container.innerHTML = "";
-          return;
-        }
-      
-        container.innerHTML = `
-          <iframe
-            src="${data.live.scorebird_url}"
-            style="
-              border:0;
-              width:100vw;
-              height:100vh;
-              background: transparent;
-            "
-            allow="autoplay"
-            allowfullscreen
-          ></iframe>
-        `;
-        return;
-      }
-      // ===== MODE LIVE =====
+      /* ===== MODE LIVE ===== */
       if (mode === "live") {
         if (!data.live) {
           container.innerHTML = "";
@@ -99,13 +89,13 @@
         }
 
         container.innerHTML = `
-          <div class="small">${data.live.division || ""} ${data.live.round || ""}</div>
-          <div>${data.live.teams}</div>
+          <div class="title">Partie : #${data.live.horaire_id}</div>
+          <div class="subtitle">${data.live.division} - ${data.live.round}</div>
         `;
         return;
       }
 
-      // ===== MODE NEXT =====
+      /* ===== MODE NEXT ===== */
       if (mode === "next") {
         if (!data.selected) {
           container.innerHTML = "";
@@ -113,8 +103,32 @@
         }
 
         container.innerHTML = `
-          <div class="small">À venir</div>
-          <div>${data.selected.teams}</div>
+          <div class="title">Prochain match :</div>
+          <div class="subtitle">
+            #${data.selected.horaire_id} – ${data.selected.date} ${data.selected.time}
+            (${data.selected.division} - ${data.selected.round})
+          </div>
+          <div class="teams">
+            ${data.selected.home_name} vs ${data.selected.away_name}
+          </div>
+        `;
+        return;
+      }
+
+      /* ===== MODE URL (Scorebird iframe) ===== */
+      if (mode === "url") {
+        if (!data.live?.scorebird_url) {
+          container.innerHTML = "";
+          return;
+        }
+
+        container.innerHTML = `
+          <iframe
+            src="${data.live.scorebird_url}"
+            style="border:0;width:100vw;height:100vh;background:transparent"
+            allow="autoplay"
+            allowfullscreen
+          ></iframe>
         `;
         return;
       }
