@@ -29,15 +29,20 @@
   @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.3);}50%{box-shadow:0 0 0 4px rgba(239,68,68,0);}}
 
   .main{position:relative;z-index:1;padding:20px 24px;max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
-
-  /* Glace title row */
   .glace-title{font-size:26px;font-weight:800;display:flex;align-items:center;gap:12px;}
   .glace-title .icon{width:38px;height:38px;border-radius:10px;background:rgba(56,189,248,0.15);color:var(--ice-blue);display:flex;align-items:center;justify-content:center;font-size:18px;}
   .glace-title .arena{color:var(--text-muted);font-weight:400;font-size:18px;}
 
-  /* Panels grid */
   .panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .panel-group{display:flex;flex-direction:column;gap:10px;}
   @media(max-width:900px){.panels{grid-template-columns:1fr;}}
+
+  /* Scorebird Preview */
+  .preview-wrapper{display:flex;flex-direction:column;gap:0;}
+  .preview-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);padding:0 0 6px 2px;}
+  .preview-frame{width:100%;height:50px;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:#000;}
+  .preview-frame iframe{width:210%;height:210%;border:0;background:transparent;transform:scale(0.476);transform-origin:top left;}
+  .preview-empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:12px;}
 
   .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
   .panel-header{padding:12px 18px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;}
@@ -58,6 +63,15 @@
   .team-name{font-size:14px;font-weight:600;text-align:center;line-height:1.2;}
   .score-display{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;}
   .score-display .sep{color:var(--text-dim);font-size:20px;}
+  .score-sep{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--text-dim);padding:0 4px;align-self:flex-end;margin-bottom:8px;}
+  .score-input{width:52px;padding:6px 4px;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;text-align:center;color:var(--text);background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;outline:none;-moz-appearance:textfield;transition:border-color 0.2s;}
+  .score-input::-webkit-inner-spin-button,.score-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  .score-input:focus{border-color:var(--accent);background:rgba(255,255,255,0.1);}
+  .score-input::placeholder{color:var(--text-dim);}
+  .score-input-sm{width:36px;padding:4px 2px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;text-align:center;color:var(--text);background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:5px;outline:none;-moz-appearance:textfield;}
+  .score-input-sm::-webkit-inner-spin-button,.score-input-sm::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  .score-input-sm:focus{border-color:var(--accent);background:rgba(255,255,255,0.1);}
+  .score-input-sm::placeholder{color:var(--text-dim);}
   .match-time{text-align:center;margin-top:10px;font-size:13px;color:var(--text-dim);}
 
   .color-control{margin-top:12px;padding:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;}
@@ -65,23 +79,32 @@
   .color-teams{display:flex;gap:10px;}
   @media(max-width:600px){.color-teams{flex-direction:column;}}
   .color-team-row{flex:1;display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid var(--border);}
-  .color-swatch{width:26px;height:26px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);flex-shrink:0;transition:transform 0.2s,box-shadow 0.2s;}
+  .color-swatch{width:26px;height:26px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);flex-shrink:0;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;position:relative;}
+  .color-swatch:hover{transform:scale(1.15);box-shadow:0 0 12px rgba(255,255,255,0.2);}
+  .color-picker-input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:none;padding:0;}
   .color-team-info{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;}
   .color-team-label{font-size:10px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
   .color-team-name-label{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .color-hex{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);cursor:pointer;}
+  .color-hex:hover{color:var(--text-muted);}
+  .color-hex-input{width:62px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text);background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;padding:2px 4px;outline:none;text-transform:uppercase;}
+  .color-hex-input:focus{border-color:var(--accent);background:rgba(255,255,255,0.1);}
   .color-mode-toggle{display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--border);flex-shrink:0;}
   .color-mode-btn{padding:3px 9px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;border:none;cursor:pointer;background:transparent;color:var(--text-dim);transition:all 0.2s;}
   .color-mode-btn:hover{color:var(--text-muted);background:rgba(255,255,255,0.04);}
   .color-mode-btn.active{background:var(--accent);color:#fff;}
 
-  .controls{display:flex;gap:8px;}
+  .controls-row{display:flex;gap:8px;}
   .btn{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg-card);color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
   .btn:hover{background:var(--bg-card-hover);border-color:var(--border-light);transform:translateY(-1px);}
   .btn:active{transform:translateY(0);}
   .btn.success{background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.3);color:var(--green);}
   .btn.success:hover{background:rgba(34,197,94,0.2);}
+  .btn-full{width:100%;}
 
-  /* Schedule */
+  .sponsor-box{padding:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+  .sponsor-box img{max-height:44px;max-width:100%;object-fit:contain;}
+
   .schedule-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
   .schedule-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
   .schedule-header h2{font-size:15px;font-weight:700;}
@@ -105,7 +128,7 @@
   .toast.success{border-color:rgba(34,197,94,0.3);}
   .toast.error{border-color:rgba(239,68,68,0.3);color:var(--red);}
 
-  @media(max-width:600px){.main{padding:12px;}.header{padding:10px 14px;}.header h1{font-size:16px;}.controls{flex-wrap:wrap;}.btn{font-size:12px;padding:8px 10px;}.glace-title{font-size:20px;}}
+  @media(max-width:600px){.main{padding:12px;}.header{padding:10px 14px;}.header h1{font-size:16px;}.controls-row{flex-wrap:wrap;}.btn{font-size:12px;padding:8px 10px;}.glace-title{font-size:20px;}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
   .panel{animation:fadeUp 0.5s ease both;}.panel:nth-child(2){animation-delay:0.1s;}
   .schedule-panel{animation:fadeUp 0.5s ease both 0.2s;}
@@ -129,39 +152,48 @@
 </header>
 
 <div class="main">
-  <!-- Glace title -->
   <div class="glace-title">
     <div class="icon">🏒</div>
     <span>Glace 1</span>
     <span class="arena" id="arenaName"></span>
   </div>
 
-  <!-- Live / Next panels -->
   <div class="panels">
-    <div class="panel" id="livePanel">
-      <div class="panel-header">
-        <div class="section-label">🔴 Match en cours</div>
-        <div class="panel-badge live" id="liveBadge">LIVE</div>
+    <div class="panel-group">
+      <div class="preview-wrapper">
+        <div class="preview-label">Aperçu Scorebird – LIVE</div>
+        <div class="preview-frame" id="livePreview"><div class="preview-empty">Aucun overlay</div></div>
       </div>
-      <div id="liveContent" class="match-card empty">Chargement…</div>
+      <div class="panel" id="livePanel">
+        <div class="panel-header">
+          <div class="section-label">🔴 Match en cours</div>
+          <div class="panel-badge live" id="liveBadge">LIVE</div>
+        </div>
+        <div id="liveContent" class="match-card empty">Chargement…</div>
+      </div>
+      <div id="sponsorLive" class="sponsor-box" style="display:none;"></div>
+      <button class="btn success btn-full" onclick="doValidate()">✓ Valider</button>
     </div>
-    <div class="panel" id="selectedPanel">
-      <div class="panel-header">
-        <div class="section-label">⏭ Prochain sélectionné</div>
-        <div class="panel-badge next">NEXT</div>
+    <div class="panel-group">
+      <div class="preview-wrapper">
+        <div class="preview-label">Aperçu Scorebird – NEXT</div>
+        <div class="preview-frame" id="selectedPreview"><div class="preview-empty">Aucun overlay</div></div>
       </div>
-      <div id="selectedContent" class="match-card empty">Chargement…</div>
+      <div class="panel" id="selectedPanel">
+        <div class="panel-header">
+          <div class="section-label">⏭ Prochain sélectionné</div>
+          <div class="panel-badge next">NEXT</div>
+        </div>
+        <div id="selectedContent" class="match-card empty">Chargement…</div>
+      </div>
+      <div id="sponsorSelected" class="sponsor-box" style="display:none;"></div>
+      <div class="controls-row">
+        <button class="btn" onclick="sendAction('prev_g1')">◀ Précédent</button>
+        <button class="btn" onclick="sendAction('next_g1')">Suivant ▶</button>
+      </div>
     </div>
   </div>
 
-  <!-- Controls -->
-  <div class="controls">
-    <button class="btn" onclick="sendAction('prev_g1')">◀ Précédent</button>
-    <button class="btn" onclick="sendAction('next_g1')">Suivant ▶</button>
-    <button class="btn success" onclick="doValidate()">✓ Valider</button>
-  </div>
-
-  <!-- Schedule -->
   <div class="schedule-panel">
     <div class="schedule-header">
       <h2>📋 Horaire</h2>
@@ -174,10 +206,7 @@
     </div>
     <div style="overflow-x:auto;">
       <table class="schedule-table">
-        <thead><tr>
-          <th>#</th><th>Heure</th><th>Division</th><th>Ronde</th>
-          <th>Visiteur</th><th>Score</th><th>Local</th><th>Statut</th>
-        </tr></thead>
+        <thead><tr><th>#</th><th>Heure</th><th>Division</th><th>Ronde</th><th>Visiteur</th><th>Score</th><th>Local</th><th>Statut</th></tr></thead>
         <tbody id="scheduleBody"></tbody>
       </table>
     </div>
@@ -211,6 +240,29 @@
   function doValidate(){showToast("✓ Validation…");sendAction("live_"+ACTION_SUFFIX);setTimeout(()=>sendAction("next_"+ACTION_SUFFIX),500);}
   function changeColor(side,mode,target){sendAction("color",{glace:GLACE_NUM,side,mode,target:target||"live"});showToast("🎨 "+side+" → "+mode);}
 
+  // Update score in Matchs sheet
+  function updateScore(horaireId,side,value){
+    sendAction("update_score",{horaire_id:horaireId,side:side,score:value});
+    showToast("⚽ #"+horaireId+" "+side+" → "+value);
+  }
+
+  // Color picker: update hex in Équipes sheet
+  function pickColor(teamName,colorType,hexValue){
+    const hex=hexValue.replace("#","").toUpperCase();
+    sendAction("update_team_color",{team:teamName,type:colorType,hex:hex});
+    showToast("🎨 "+teamName+" → #"+hex);
+  }
+
+  // Hex text input: submit on Enter or blur
+  function submitHex(teamName,colorType,inputEl){
+    let hex=inputEl.value.replace(/[^0-9A-Fa-f]/g,"").toUpperCase();
+    if(hex.length!==6&&hex.length!==3)return; // ignore invalid
+    if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    inputEl.value=hex;
+    sendAction("update_team_color",{team:teamName,type:colorType,hex:hex});
+    showToast("🎨 "+teamName+" → #"+hex);
+  }
+
   async function loadDashboard(){
     setStatus("loading","Chargement…");
     try{
@@ -228,20 +280,37 @@
     document.getElementById("statusText").textContent=txt;
   }
 
+  // Scale iframes to fit container width
+
   function renderGlace(){
     const g=dashData[GLACE_KEY];if(!g)return;
-
-    // Arena name from API
     const name=g.glace_name||"";
     document.getElementById("arenaName").textContent=name?"("+name+")":"";
 
-    // Live badge visibility
     const badge=document.getElementById("liveBadge");
     if(g.live){badge.style.display="";badge.className="panel-badge live";badge.textContent="LIVE";}
     else{badge.style.display="none";}
 
     document.getElementById("liveContent").outerHTML=renderCard(g.live,true);
     document.getElementById("selectedContent").outerHTML=renderCard(g.selected,false);
+
+    // Scorebird preview iframes
+    const livePreview=document.getElementById("livePreview");
+    if(g.live&&g.live.url_scorebird){
+      livePreview.innerHTML='<iframe src="'+g.live.url_scorebird+'" allow="autoplay" allowfullscreen></iframe>';
+    }else{livePreview.innerHTML='<div class="preview-empty">Aucun overlay</div>';}
+
+    const selPreview=document.getElementById("selectedPreview");
+    if(g.selected&&g.selected.url_scorebird){
+      selPreview.innerHTML='<iframe src="'+g.selected.url_scorebird+'" allow="autoplay" allowfullscreen></iframe>';
+    }else{selPreview.innerHTML='<div class="preview-empty">Aucun overlay</div>';}
+
+    // Sponsor logos
+    const sL=document.getElementById("sponsorLive");
+    if(g.live&&g.live.url_commanditaire){sL.style.display="flex";sL.innerHTML='<img src="'+g.live.url_commanditaire+'" alt="Commanditaire">';}else{sL.style.display="none";}
+    const sS=document.getElementById("sponsorSelected");
+    if(g.selected&&g.selected.url_commanditaire){sS.style.display="flex";sS.innerHTML='<img src="'+g.selected.url_commanditaire+'" alt="Commanditaire">';}else{sS.style.display="none";}
+
   }
 
   function renderCard(match,isLive){
@@ -253,31 +322,62 @@
     const hc=gc(match.home,match.home_color_mode||"Primary");
     const al=match.away_logo?'<img src="'+match.away_logo+'">':(match.away||"?").charAt(0);
     const hl=match.home_logo?'<img src="'+match.home_logo+'">':(match.home||"?").charAt(0);
-    const hs=match.away_score!==""&&match.away_score!=null;
-    const sc=hs?'<span>'+match.away_score+'</span><span class="sep">–</span><span>'+match.home_score+'</span>':'<span style="color:var(--text-dim)">–</span>';
     const tgt=isLive?"live":"selected";
     const am=match.away_color_mode||"Secondary";
     const hm=match.home_color_mode||"Primary";
+    const awayColorType=am.toLowerCase();
+    const homeColorType=hm.toLowerCase();
+    const awayTeam=match.away||"";
+    const homeTeam=match.home||"";
+    const awayScoreVal=(match.away_score!=null&&match.away_score!=="")?""+match.away_score:"";
+    const homeScoreVal=(match.home_score!=null&&match.home_score!=="")?""+match.home_score:"";
+    const hid=match.horaire_id;
+
     return '<div id="'+id+'" class="match-card">'+
       '<div class="match-meta"><span class="tag">'+(match.division||"")+'</span>'+
       (match.round?'<span class="tag round">'+match.round+'</span>':'')+
       '<span>#'+match.horaire_id+'</span></div>'+
       '<div class="match-teams">'+
-        '<div class="team"><div class="team-logo" style="border-color:#'+ac+';box-shadow:0 0 10px #'+ac+'55">'+al+'</div><div class="team-name">'+(match.away||"—")+'</div></div>'+
-        '<div class="score-display">'+sc+'</div>'+
-        '<div class="team"><div class="team-logo" style="border-color:#'+hc+';box-shadow:0 0 10px #'+hc+'55">'+hl+'</div><div class="team-name">'+(match.home||"—")+'</div></div>'+
+        '<div class="team">'+
+          '<div class="team-logo" style="border-color:#'+ac+';box-shadow:0 0 10px #'+ac+'55">'+al+'</div>'+
+          '<div class="team-name">'+(match.away||"—")+'</div>'+
+          '<input type="number" class="score-input" value="'+awayScoreVal+'" min="0" placeholder="–" onchange="updateScore('+hid+',\'away\',this.value)">'+
+        '</div>'+
+        '<div class="score-sep">–</div>'+
+        '<div class="team">'+
+          '<div class="team-logo" style="border-color:#'+hc+';box-shadow:0 0 10px #'+hc+'55">'+hl+'</div>'+
+          '<div class="team-name">'+(match.home||"—")+'</div>'+
+          '<input type="number" class="score-input" value="'+homeScoreVal+'" min="0" placeholder="–" onchange="updateScore('+hid+',\'home\',this.value)">'+
+        '</div>'+
       '</div>'+
       '<div class="match-time">'+(match.date?formatDateFR(match.date):"")+" "+(match.time||"")+'</div>'+
       '<div class="color-control"><div class="color-control-title">🎨 Couleurs Scorebird</div><div class="color-teams">'+
-        '<div class="color-team-row"><div class="color-swatch" style="background:#'+ac+'"></div><div class="color-team-info"><span class="color-team-label">Visiteur</span><span class="color-team-name-label">'+(match.away||"—")+'</span></div><div class="color-mode-toggle"><button class="color-mode-btn '+(am==="Primary"?"active":"")+'" onclick="changeColor(\'away\',\'Primary\',\''+tgt+'\')">Pri</button><button class="color-mode-btn '+(am==="Secondary"?"active":"")+'" onclick="changeColor(\'away\',\'Secondary\',\''+tgt+'\')">Sec</button></div></div>'+
-        '<div class="color-team-row"><div class="color-swatch" style="background:#'+hc+'"></div><div class="color-team-info"><span class="color-team-label">Local</span><span class="color-team-name-label">'+(match.home||"—")+'</span></div><div class="color-mode-toggle"><button class="color-mode-btn '+(hm==="Primary"?"active":"")+'" onclick="changeColor(\'home\',\'Primary\',\''+tgt+'\')">Pri</button><button class="color-mode-btn '+(hm==="Secondary"?"active":"")+'" onclick="changeColor(\'home\',\'Secondary\',\''+tgt+'\')">Sec</button></div></div>'+
+        // Away team color row
+        '<div class="color-team-row">'+
+          '<div class="color-swatch" style="background:#'+ac+'">'+
+            '<input type="color" class="color-picker-input" value="#'+ac+'" onchange="pickColor(\''+awayTeam.replace(/'/g,"\\'")+'\',\''+awayColorType+'_color\',this.value)">'+
+          '</div>'+
+          '<div class="color-team-info"><span class="color-team-label">Visiteur</span><span class="color-team-name-label">'+(match.away||"—")+'</span>'+
+            '<span class="color-hex">#<input type="text" class="color-hex-input" value="'+ac+'" maxlength="6" onkeydown="if(event.key===\'Enter\'){submitHex(\''+awayTeam.replace(/'/g,"\\'")+'\',\''+awayColorType+'_color\',this)}" onblur="submitHex(\''+awayTeam.replace(/'/g,"\\'")+'\',\''+awayColorType+'_color\',this)"></span>'+
+          '</div>'+
+          '<div class="color-mode-toggle"><button class="color-mode-btn '+(am==="Primary"?"active":"")+'" onclick="changeColor(\'away\',\'Primary\',\''+tgt+'\')">Pri</button><button class="color-mode-btn '+(am==="Secondary"?"active":"")+'" onclick="changeColor(\'away\',\'Secondary\',\''+tgt+'\')">Sec</button></div>'+
+        '</div>'+
+        // Home team color row
+        '<div class="color-team-row">'+
+          '<div class="color-swatch" style="background:#'+hc+'">'+
+            '<input type="color" class="color-picker-input" value="#'+hc+'" onchange="pickColor(\''+homeTeam.replace(/'/g,"\\'")+'\',\''+homeColorType+'_color\',this.value)">'+
+          '</div>'+
+          '<div class="color-team-info"><span class="color-team-label">Local</span><span class="color-team-name-label">'+(match.home||"—")+'</span>'+
+            '<span class="color-hex">#<input type="text" class="color-hex-input" value="'+hc+'" maxlength="6" onkeydown="if(event.key===\'Enter\'){submitHex(\''+homeTeam.replace(/'/g,"\\'")+'\',\''+homeColorType+'_color\',this)}" onblur="submitHex(\''+homeTeam.replace(/'/g,"\\'")+'\',\''+homeColorType+'_color\',this)"></span>'+
+          '</div>'+
+          '<div class="color-mode-toggle"><button class="color-mode-btn '+(hm==="Primary"?"active":"")+'" onclick="changeColor(\'home\',\'Primary\',\''+tgt+'\')">Pri</button><button class="color-mode-btn '+(hm==="Secondary"?"active":"")+'" onclick="changeColor(\'home\',\'Secondary\',\''+tgt+'\')">Sec</button></div>'+
+        '</div>'+
       '</div></div></div>';
   }
 
   function renderSchedule(filter){
     if(!dashData||!dashData.matchs)return;
     const tbody=document.getElementById("scheduleBody");
-    // Filter to this glace only by scorebird serial
     let list=dashData.matchs.filter(m=>Number(m.scorebird)===SCOREBIRD);
     if(filter!=="all")list=list.filter(m=>{
       if(filter==="live")return m.statut==="Live";
@@ -286,9 +386,11 @@
     });
     tbody.innerHTML=list.map(m=>{
       const cls=m.statut==="Live"?"live":m.statut==="À venir"?"upcoming":"completed";
-      const hs=m.away_score!==""&&m.away_score!=null;
-      const sc=hs?m.away_score+" – "+m.home_score:"–";
-      return '<tr><td style="font-family:\'JetBrains Mono\',monospace;color:var(--text-dim)">'+m.horaire_id+'</td><td>'+(m.time||"")+'</td><td>'+(m.division||"")+'</td><td>'+(m.round||"")+'</td><td style="font-weight:600">'+(m.away||"")+'</td><td style="font-family:\'JetBrains Mono\',monospace;text-align:center;font-weight:600">'+sc+'</td><td style="font-weight:600">'+(m.home||"")+'</td><td><span class="status-pill '+cls+'"><span class="dot"></span>'+(m.statut||"")+'</span></td></tr>';
+      const asVal=(m.away_score!=null&&m.away_score!=="")?""+m.away_score:"";
+      const hsVal=(m.home_score!=null&&m.home_score!=="")?""+m.home_score:"";
+      return '<tr><td style="font-family:\'JetBrains Mono\',monospace;color:var(--text-dim)">'+m.horaire_id+'</td><td>'+(m.time||"")+'</td><td>'+(m.division||"")+'</td><td>'+(m.round||"")+'</td><td style="font-weight:600">'+(m.away||"")+'</td>'+
+        '<td style="text-align:center"><input type="number" class="score-input-sm" value="'+asVal+'" min="0" placeholder="–" onchange="updateScore('+m.horaire_id+',\'away\',this.value)"> <span style="color:var(--text-dim)">–</span> <input type="number" class="score-input-sm" value="'+hsVal+'" min="0" placeholder="–" onchange="updateScore('+m.horaire_id+',\'home\',this.value)"></td>'+
+        '<td style="font-weight:600">'+(m.home||"")+'</td><td><span class="status-pill '+cls+'"><span class="dot"></span>'+(m.statut||"")+'</span></td></tr>';
     }).join("");
   }
 
@@ -297,7 +399,6 @@
   function showToast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast "+(type||"success")+" show";clearTimeout(t._t);t._t=setTimeout(()=>t.className="toast",2500);}
 
   loadDashboard();
-  setInterval(loadDashboard,30000);
 </script>
 </body>
 </html>
